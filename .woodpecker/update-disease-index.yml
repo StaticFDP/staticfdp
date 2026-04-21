@@ -1,0 +1,44 @@
+# Woodpecker CI — Update Disease Index
+#
+# EU mirror of .github/workflows/update-disease-index.yml
+# Converts Forgejo Issues into per-disease FAIR datasets.
+#
+# Trigger: issue webhook (configured in Codeberg repo settings)
+#          or manual run via Woodpecker UI
+#
+# Secrets required (Codeberg repo → Settings → Secrets):
+#   FORGEJO_TOKEN — Codeberg access token with Issues: Read & Write
+
+when:
+  event: [ push, manual ]
+
+steps:
+  - name: generate-datasets
+    image: python:3.12-slim
+    environment:
+      FORGEJO_TOKEN:
+        from_secret: FORGEJO_TOKEN
+      FORGEJO_REPO:     StaticFDP/ga4gh-rare-disease-trajectories
+      FORGEJO_BASE_URL: https://codeberg.org
+      # Read from Forgejo only on the EU pipeline
+      GITHUB_TOKEN:     ""
+      GITHUB_REPO:      StaticFDP/ga4gh-rare-disease-trajectories
+      GITHUB_SHA:       ${CI_COMMIT_SHA}
+    commands:
+      - pip install --quiet rdflib
+      - python3 scripts/issues_to_datasets.py
+
+  - name: commit-and-push
+    image: alpine/git:latest
+    environment:
+      FORGEJO_TOKEN:
+        from_secret: FORGEJO_TOKEN
+    commands:
+      - git config user.name  "woodpecker-bot"
+      - git config user.email "woodpecker-bot@codeberg.org"
+      - git add diseases/ docs/diseases/ docs/fdp/submissions.ttl || true
+      - |
+        git diff --staged --quiet \
+          && echo "No changes to commit" \
+          || git commit -m "data: update disease datasets [skip ci]"
+      - git push "https://woodpecker-bot:${FORGEJO_TOKEN}@codeberg.org/StaticFDP/ga4gh-rare-disease-trajectories.git" HEAD:main

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StaticFDP Ecosystem</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+           font-size: 16px; line-height: 1.6; color: #1a1a2e; background: #f8fafc; }
+    a { color: #1a6b5a; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    header { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b5a 60%, #2563eb 100%);
+             color: #fff; padding: 52px 24px 44px; text-align: center; }
+    header h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800;
+                letter-spacing: -.02em; margin-bottom: 12px; }
+    header p { font-size: clamp(15px, 2vw, 18px); opacity: .85; max-width: 620px;
+               margin: 0 auto 24px; }
+    .badge { display: inline-block; background: rgba(255,255,255,.18);
+             border: 1px solid rgba(255,255,255,.35); border-radius: 20px;
+             padding: 3px 14px; font-size: 12px; letter-spacing: .05em;
+             text-transform: uppercase; margin-bottom: 16px; }
+    section { padding: 44px 0; }
+    section + section { border-top: 1px solid #e5e7eb; }
+    h2 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+    h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    p { margin-top: .5rem; }
+    p:first-child { margin-top: 0; }
+
+    /* ── Component tiles ── */
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem; margin-top: 1.4rem;
+    }
+    .component {
+      background: #fff; border: 2px solid #e5e7eb; border-radius: 12px;
+      padding: 1.4rem 1.6rem; position: relative; overflow: hidden;
+    }
+    .component::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    }
+    .component.fdp::before  { background: #1a6b5a; }
+    .component.idx::before  { background: #2563eb; }
+    .component.vp::before   { background: #7c3aed; }
+    .component .chip {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; padding: 2px 10px; border-radius: 20px; margin-bottom: 10px;
+    }
+    .component.fdp .chip  { background: #dcfce7; color: #166534; }
+    .component.idx .chip  { background: #dbeafe; color: #1e40af; }
+    .component.vp .chip   { background: #ede9fe; color: #5b21b6; }
+    .component p { font-size: 14px; color: #374151; }
+    .component ul { font-size: 13px; color: #6b7280; padding-left: 1.1rem; margin-top: .5rem; }
+    .component ul li { margin-top: .25rem; }
+    .component .links { margin-top: 1rem; display: flex; gap: .6rem; flex-wrap: wrap; }
+    .component .links a {
+      font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px;
+      text-decoration: none; border: 1px solid;
+    }
+    .component.fdp .links a { color: #1a6b5a; border-color: #1a6b5a; }
+    .component.idx .links a { color: #2563eb; border-color: #2563eb; }
+    .component.vp  .links a { color: #7c3aed; border-color: #7c3aed; }
+    .component .links a:hover { opacity: .75; }
+
+    /* ── How it fits together ── */
+    .arch {
+      background: #fff; border: 1px solid #e5e7eb; border-radius: 10px;
+      padding: 1.4rem 1.6rem; margin-top: 1.2rem;
+      font-size: 14px; color: #374151;
+    }
+    .arch pre {
+      background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px;
+      padding: .8rem 1rem; font-size: 13px; overflow-x: auto; margin-top: .8rem;
+      color: #1a1a2e; white-space: pre;
+    }
+
+    /* ── Small card grid ── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                 gap: 1rem; margin-top: 1.2rem; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px;
+            padding: 1.2rem 1.4rem; }
+    .card h3 { font-size: 15px; margin-bottom: 6px; }
+    .card p { font-size: 14px; color: #6b7280; }
+    .card a { font-size: 13px; display: inline-block; margin-top: 8px; font-weight: 600; }
+
+    code { font-family: monospace; font-size: 13px; background: #f1f5f9;
+           padding: 2px 6px; border-radius: 4px; }
+    pre { background: #1e293b; color: #e2e8f0; padding: 1rem 1.2rem;
+          border-radius: 8px; font-size: 13px; overflow-x: auto; margin-top: .6rem; }
+    ol { padding-left: 1.4rem; line-height: 2; }
+    footer { background: #1a1a2e; color: rgba(255,255,255,.5); padding: 24px;
+             text-align: center; font-size: 13px; }
+    footer a { color: rgba(255,255,255,.7); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="badge">StaticFDP Ecosystem</div>
+    <h1>FAIR Data Points<br>without a server</h1>
+    <p>
+      Three open-source reference implementations — a FAIR Data Point,
+      an FDP Index, and a Virtual Platform — all deployable on static hosting
+      with no dedicated server required.
+    </p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ── The three components ───────────────────────────────────────────── -->
+  <section>
+    <h2>The ecosystem</h2>
+    <p>
+      The StaticFDP ecosystem provides static-hosting reference implementations
+      for the three layers of the FAIR Data Point architecture.
+      Each component is a standalone repository that can be deployed independently
+      on GitHub Pages, Codeberg Pages, or any static host — and every component
+      lives on both GitHub and Codeberg for sovereignty and redundancy.
+    </p>
+
+    <div class="component-grid">
+
+      <div class="component fdp">
+        <span class="chip">staticfdp</span>
+        <h3>Static FAIR Data Point</h3>
+        <p>A template for publishing a DCAT-conformant FDP using only static hosting.
+           Contributors submit data via web forms; a CI/CD pipeline converts every
+           submission to RDF Turtle and updates the FDP automatically.</p>
+        <ul>
+          <li>Form → GitHub / Forgejo Issues → RDF</li>
+          <li>ORCID authentication via Cloudflare Worker or Deno</li>
+          <li>GitHub Actions <em>and</em> Woodpecker CI pipelines included</li>
+          <li>Configurable: GitHub, Codeberg, or both</li>
+        </ul>
+        <div class="links">
+          <a href="https://github.com/StaticFDP/staticfdp" target="_blank">GitHub →</a>
+          <a href="https://codeberg.org/StaticFDP/staticfdp" target="_blank">Codeberg →</a>
+        </div>
+      </div>
+
+      <div class="component idx">
+        <span class="chip">staticfdp-index</span>
+        <h3>Static FDP Index</h3>
+        <p>A static FDP Index that lets FAIR Data Points register themselves and
+           be discoverable. Registration is an Issue or a YAML pull request;
+           a CI pipeline periodically harvests all registered FDPs and rebuilds
+           the index catalog as RDF + HTML.</p>
+        <ul>
+          <li>FDPs register via Issues or YAML PR</li>
+          <li>Harvest pipeline fetches each FDP's catalog.ttl</li>
+          <li>Serves DCAT index + HTML discovery page</li>
+          <li>SPARQL-over-static demo included</li>
+        </ul>
+        <div class="links">
+          <a href="https://github.com/StaticFDP/staticfdp-index" target="_blank">GitHub →</a>
+          <a href="https://codeberg.org/StaticFDP/staticfdp-index" target="_blank">Codeberg →</a>
+        </div>
+      </div>
+
+      <div class="component vp">
+        <span class="chip">staticfdp-vp</span>
+        <h3>Static Virtual Platform</h3>
+        <p>A static Virtual Platform that aggregates multiple FDP Indexes into
+           a single federated discovery hub. Data stays at its source;
+           the VP only stores pointers. A CI pipeline rebuilds the
+           aggregated catalog on a schedule.</p>
+        <ul>
+          <li>Aggregates N FDP Indexes into one catalog</li>
+          <li>HTML search + browse interface — no server</li>
+          <li>DCAT-AP federation graph served as Turtle + JSON-LD</li>
+          <li>Scheduled rebuild via GitHub Actions / Woodpecker CI</li>
+        </ul>
+        <div class="links">
+          <a href="https://github.com/StaticFDP/staticfdp-vp" target="_blank">GitHub →</a>
+          <a href="https://codeberg.org/StaticFDP/staticfdp-vp" target="_blank">Codeberg →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Architecture ───────────────────────────────────────────────────── -->
+  <section>
+    <h2>How the layers connect</h2>
+    <p>
+      Each layer is independently deployable. Together they form a fully
+      FAIR-compliant federation — from individual dataset submissions
+      up to cross-institutional discovery.
+    </p>
+    <div class="arch">
+      <strong>Data flow — bottom up</strong>
+      <pre>
+  Contributor fills in form
+         │
+         ▼
+  ┌─────────────────────────────────────────────────┐
+  │  staticfdp  (one per project / institution)     │
+  │  Issues → RDF Turtle → GitHub Pages / Codeberg  │
+  └─────────────────┬───────────────────────────────┘
+                    │  registers (ping / PR)
+                    ▼
+  ┌─────────────────────────────────────────────────┐
+  │  staticfdp-index  (one per community / domain)  │
+  │  Harvests FDP catalogs → DCAT index → static    │
+  └─────────────────┬───────────────────────────────┘
+                    │  aggregated by
+                    ▼
+  ┌─────────────────────────────────────────────────┐
+  │  staticfdp-vp  (global / cross-domain)          │
+  │  Aggregates indexes → federation graph → static │
+  └─────────────────────────────────────────────────┘</pre>
+    </div>
+  </section>
+
+  <!-- ── Infrastructure choice ─────────────────────────────────────────── -->
+  <section>
+    <h2>GitHub · Codeberg · or both</h2>
+    <p>
+      Every component in the ecosystem is designed to run on either platform —
+      or both simultaneously for data sovereignty and redundancy.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>GitHub (US)</h3>
+        <p>GitHub Pages for static hosting. GitHub Actions for CI/CD.
+           GitHub Issues as the data store for submissions.</p>
+      </div>
+      <div class="card">
+        <h3>Codeberg (EU)</h3>
+        <p>Codeberg Pages on Hetzner Frankfurt. Woodpecker CI for pipelines.
+           Forgejo Issues as the data store. GDPR-friendly jurisdiction.</p>
+      </div>
+      <div class="card">
+        <h3>Both (dual-write)</h3>
+        <p>Form submissions go to both platforms simultaneously.
+           Either platform can serve data independently.
+           Run <code>scripts/setup.sh</code> to configure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Quick start ────────────────────────────────────────────────────── -->
+  <section>
+    <h2>Quick start</h2>
+    <ol>
+      <li>Fork the component you need (<code>staticfdp</code>, <code>staticfdp-index</code>, or <code>staticfdp-vp</code>)</li>
+      <li>Run <code>bash scripts/setup.sh</code> — choose GitHub, Codeberg, or both</li>
+      <li>Set the required secrets (<code>GITHUB_TOKEN</code>, <code>ORCID_CLIENT_ID</code>, etc.)</li>
+      <li>Enable GitHub Pages (branch: <code>main</code>, path: <code>/docs</code>)</li>
+    </ol>
+    <pre>git clone https://github.com/StaticFDP/staticfdp
+cd staticfdp
+bash scripts/setup.sh</pre>
+  </section>
+
+  <!-- ── Reference deployment ──────────────────────────────────────────── -->
+  <section>
+    <h2>Reference deployment</h2>
+    <p>
+      The <strong>GA4GH Bring Your Own Disease</strong> session (April 2026)
+      is the first live deployment of the <code>staticfdp</code> component.
+      It collects rare disease trajectories from session participants and
+      publishes them as a DCAT-conformant FAIR Data Point.
+    </p>
+    <div class="card-grid" style="margin-top:1rem;">
+      <div class="card">
+        <h3>Session landing page</h3>
+        <p>Form submission, disease dataset index, SPARQL demo.</p>
+        <a href="https://fdp.semscape.org/ga4gh-rare-disease-trajectories/">
+          fdp.semscape.org/ga4gh-rare-disease-trajectories →
+        </a>
+      </div>
+      <div class="card">
+        <h3>Source repository</h3>
+        <p>The full GA4GH session implementation — issues, pipeline, RDF.</p>
+        <a href="https://github.com/StaticFDP/ga4gh-rare-disease-trajectories" target="_blank">
+          github.com/StaticFDP/ga4gh-rare-disease-trajectories →
+        </a>
+      </div>
+      <div class="card">
+        <h3>FDP catalog (RDF)</h3>
+        <p>Machine-readable DCAT catalog of all submitted disease datasets.</p>
+        <a href="https://fdp.semscape.org/ga4gh-rare-disease-trajectories/fdp/catalog.ttl">
+          catalog.ttl →
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  StaticFDP Ecosystem — FAIR Data Points on static hosting &nbsp;·&nbsp;
+  <a href="https://github.com/StaticFDP">GitHub</a> &nbsp;·&nbsp;
+  <a href="https://codeberg.org/StaticFDP">Codeberg</a>
+</footer>
+
+</body>
+</html>

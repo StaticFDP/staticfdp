@@ -1,0 +1,44 @@
+@prefix dcat:    <https://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix fdp:     <https://w3id.org/fdp/fdp-o#> .
+@prefix r3d:     <http://www.re3data.org/schema/3-0#> .
+# Replace BASE_URL with your FDP's public URL (set in fdp-config.yaml)
+@prefix :        <BASE_URL/fdp/> .
+
+# ─── FAIR Data Point root ─────────────────────────────────────────────────────
+
+<BASE_URL/fdp/>
+    a                    fdp:MetadataService, r3d:Repository ;
+    dcterms:title        "My FAIR Data Point"@en ;
+    dcterms:description  "A StaticFDP deployment. Edit fdp-config.yaml to customise."@en ;
+    dcterms:publisher    :publisher ;
+    dcterms:license      <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:issued       "YYYY-MM-DD"^^xsd:date ;
+    dcterms:modified     "YYYY-MM-DD"^^xsd:date ;
+    fdp:hasCatalog       :catalog .
+
+# ─── Catalog ──────────────────────────────────────────────────────────────────
+
+:catalog a dcat:Catalog ;
+    dcterms:title       "My Dataset Catalog"@en ;
+    dcterms:description "Datasets collected and published via StaticFDP."@en ;
+    dcterms:issued      "YYYY-MM-DD"^^xsd:date ;
+    dcterms:modified    "YYYY-MM-DD"^^xsd:date ;
+    dcterms:license     <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:publisher   :publisher .
+    # dcat:dataset  :my-dataset-1 , :my-dataset-2 .
+
+:publisher a foaf:Organization ;
+    foaf:name  "My Organisation" ;
+    foaf:page  <https://example.org/> .
+
+# ─── Add your datasets below ──────────────────────────────────────────────────
+# :my-dataset-1 a dcat:Dataset ;
+#     dcterms:title  "My first dataset"@en ;
+#     dcat:distribution :dist-1 .
+#
+# :dist-1 a dcat:Distribution ;
+#     dcterms:format   "text/turtle" ;
+#     dcat:downloadURL <BASE_URL/fdp/my-dataset-1.ttl> .

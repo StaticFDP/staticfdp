@@ -1,0 +1,31 @@
+# FDP Infrastructure Configuration
+# ==================================
+# Run  scripts/setup.sh  to fill this in interactively,
+# or edit directly and commit.
+#
+# infrastructure.primary — where Issues (form submissions) are stored:
+#   github    — GitHub.com  (Microsoft, US jurisdiction)
+#   codeberg  — Codeberg.org (German non-profit, EU / Hetzner Frankfurt)
+#   both      — dual-write; issues go to both, datasets merged on build
+
+infrastructure:
+  primary: github          # github | codeberg | both
+
+  github:
+    enabled: true
+    repo: OWNER/REPO
+    pages_url: https://OWNER.github.io/REPO
+
+  codeberg:
+    enabled: false
+    repo: OWNER/REPO
+    base_url: https://codeberg.org
+    pages_url: https://OWNER.codeberg.page/REPO
+
+fdp:
+  title: "My FAIR Data Point"
+  # Canonical public URL embedded in all RDF metadata
+  base_url: https://OWNER.github.io/REPO
+  license: https://creativecommons.org/licenses/by/4.0/
+  publisher_name: "My Organisation"
+  publisher_url: https://example.org/

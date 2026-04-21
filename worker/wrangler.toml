@@ -1,0 +1,21 @@
+name            = "staticfdp-worker"
+main            = "src/index.js"
+compatibility_date = "2024-09-23"
+
+[vars]
+# ── Primary platform ─────────────────────────────────────────────────────────
+# Set by scripts/setup.sh or edit manually.
+GITHUB_REPO      = "OWNER/REPO"
+LANDING_PAGE     = "https://OWNER.github.io/REPO/"
+
+# ── EU mirror (Codeberg/Forgejo) ─────────────────────────────────────────────
+# Leave blank to disable dual-write. Set FORGEJO_TOKEN secret to activate.
+FORGEJO_BASE_URL = "https://codeberg.org"
+FORGEJO_REPO     = "OWNER/REPO"
+
+# ── Secrets (never stored here — use: wrangler secret put <NAME>) ────────────
+# GITHUB_TOKEN        — fine-grained PAT, Issues: Read & Write on GITHUB_REPO
+# FORGEJO_TOKEN       — Codeberg token, Issues: Read & Write on FORGEJO_REPO
+# ORCID_CLIENT_ID     — from orcid.org/developer-tools
+# ORCID_CLIENT_SECRET — same
+# SESSION_SECRET      — any random 32+ character string

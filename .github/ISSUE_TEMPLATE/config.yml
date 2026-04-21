@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Session landing page
+    url: https://staticfdp.github.io/ga4gh-rare-disease-trajectories/
+    about: Overview of the session, both contribution paths, and links to the FDP index
+  - name: CONTRIBUTING.md
+    url: https://github.com/StaticFDP/ga4gh-rare-disease-trajectories/blob/main/CONTRIBUTING.md
+    about: Full guide for technical contributors (RDF / ShEx / pull requests)

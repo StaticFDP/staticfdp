@@ -1,0 +1,68 @@
+# Woodpecker CI — Publish FDP
+#
+# EU mirror of .github/workflows/publish.yml
+# Regenerates RDF serialisations and deploys docs/ to Codeberg Pages.
+#
+# Codeberg Pages are served from the `pages` branch (or docs/ on main —
+# configure in Codeberg repo settings → Pages).
+#
+# Secrets required:
+#   FORGEJO_TOKEN — Codeberg access token with Contents: Read & Write
+
+when:
+  event: [ push ]
+  branch: main
+
+steps:
+  - name: generate-rdf
+    image: python:3.12-slim
+    commands:
+      - pip install --quiet rdflib
+      - |
+        python3 - <<'PYEOF'
+        import glob, os
+        from rdflib import Graph
+
+        candidates = (
+          [f for f in os.listdir('.') if os.path.isfile(f)
+            and '.' not in f and not f.startswith('.')]
+          + glob.glob('cases/**/*', recursive=True)
+        )
+        resources = [f for f in candidates
+          if os.path.isfile(f)
+          and '.' not in os.path.basename(f)
+          and not f.startswith(('.', 'generated'))]
+        os.makedirs('generated', exist_ok=True)
+        for src in resources:
+          try:
+            g = Graph()
+            g.parse(src, format='turtle')
+            out = f"generated/{src}"
+            os.makedirs(os.path.dirname(out) or '.', exist_ok=True)
+            g.serialize(f"{out}.ttl",    format='turtle')
+            g.serialize(f"{out}.jsonld", format='json-ld', indent=2)
+            print(f"ok {src}")
+          except Exception as e:
+            print(f"skip {src}: {e}")
+        PYEOF
+
+  - name: copy-metadata-to-docs
+    image: alpine:latest
+    commands:
+      - mkdir -p docs/fdp
+      - cp metadata/fdp/*.ttl docs/fdp/ || true
+
+  - name: commit-and-push
+    image: alpine/git:latest
+    environment:
+      FORGEJO_TOKEN:
+        from_secret: FORGEJO_TOKEN
+    commands:
+      - git config user.name  "woodpecker-bot"
+      - git config user.email "woodpecker-bot@codeberg.org"
+      - git add generated/ docs/fdp/ || true
+      - |
+        git diff --staged --quiet \
+          && echo "Nothing to commit" \
+          || git commit -m "chore: regenerate derived artifacts [skip ci]"
+      - git push "https://woodpecker-bot:${FORGEJO_TOKEN}@codeberg.org/StaticFDP/ga4gh-rare-disease-trajectories.git" HEAD:main

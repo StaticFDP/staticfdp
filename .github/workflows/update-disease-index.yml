@@ -1,0 +1,102 @@
+name: Update Disease Index
+
+# Converts GitHub Issues into per-disease FAIR datasets and regenerates
+# the biohackathon index at docs/diseases/index.html.
+#
+# Flow:  Issue opened/labelled  →  issues_to_datasets.py
+#        →  diseases/{slug}/metadata.ttl + cases.ttl + gaps.ttl + README.md
+#        →  docs/diseases/index.{html,ttl,jsonld}
+#        →  docs/diseases/{slug}.{ttl,jsonld}
+#        →  docs/fdp/submissions.ttl  (backward-compatible flat file)
+#        →  commit [skip ci]
+
+on:
+  issues:
+    types: [opened, labeled, edited, closed, reopened]
+
+  schedule:
+    - cron: '25 4 * * *'
+
+  workflow_dispatch:
+    inputs:
+      infrastructure:
+        description: 'Where should the FDP data live? (overrides fdp-config.yaml for this run)'
+        required: false
+        default: ''
+        type: choice
+        options:
+          - ''
+          - github
+          - codeberg
+          - both
+
+permissions:
+  contents: write
+  issues:   read
+
+jobs:
+  build:
+    # Only run on relevant labels (or non-issue triggers)
+    if: >
+      github.event_name != 'issues' ||
+      contains(github.event.issue.labels.*.name, 'disease-case') ||
+      contains(github.event.issue.labels.*.name, 'ontology-gap') ||
+      contains(github.event.issue.labels.*.name, 'data-gap') ||
+      github.event.label.name == 'disease-case' ||
+      github.event.label.name == 'ontology-gap' ||
+      github.event.label.name == 'data-gap'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate per-disease datasets and index
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO:  ${{ github.repository }}
+          GITHUB_SHA:   ${{ github.sha }}
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
+          # Manual dispatch can override the platform for a single run
+          INFRASTRUCTURE_OVERRIDE: ${{ github.event.inputs.infrastructure }}
+        run: python3 scripts/issues_to_datasets.py
+
+      - name: Commit generated datasets
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add diseases/ docs/diseases/ docs/fdp/submissions.ttl
+
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+
+          TRIGGER="${{ github.event_name }}"
+          if [ "$TRIGGER" = "issues" ]; then
+            MSG="data: update disease datasets (issue #${{ github.event.issue.number }} ${{ github.event.action }}) [skip ci]"
+          else
+            MSG="data: rebuild disease index (${TRIGGER}) [skip ci]"
+          fi
+
+          git commit -m "$MSG"
+          git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Disease Index Update" >> $GITHUB_STEP_SUMMARY
+          if [ -d diseases ]; then
+            COUNT=$(ls -d diseases/*/ 2>/dev/null | wc -l | tr -d ' ')
+            echo "- **${COUNT}** disease dataset folder(s) in \`diseases/\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f docs/diseases/index.html ]; then
+            echo "- Index: https://fdp.semscape.org/ga4gh-rare-disease-trajectories/diseases/" >> $GITHUB_STEP_SUMMARY
+            echo "- RDF:   https://fdp.semscape.org/ga4gh-rare-disease-trajectories/diseases/index.ttl" >> $GITHUB_STEP_SUMMARY
+          fi
