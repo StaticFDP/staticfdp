@@ -62,26 +62,16 @@ bash scripts/setup.sh
 
 ## Architecture overview
 
-```
-Contributor fills in form
-       │
-       ▼
-┌─────────────────────────────────────────────────┐
-│  staticfdp  (one per project / institution)     │
-│  Issues → RDF Turtle → GitHub Pages / Codeberg  │
-└─────────────────┬───────────────────────────────┘
-                  │  registers (ping / PR)
-                  ▼
-┌─────────────────────────────────────────────────┐
-│  staticfdp-index  (one per community / domain)  │
-│  Harvests FDP catalogs → DCAT index → static    │
-└─────────────────┬───────────────────────────────┘
-                  │  aggregated by
-                  ▼
-┌─────────────────────────────────────────────────┐
-│  staticfdp-vp  (global / cross-domain)          │
-│  Aggregates indexes → federation graph → static │
-└─────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    F(["👤 Contributor fills in form"])
+    FDP["**staticfdp**\none per project / institution\nIssues → RDF Turtle → Pages"]
+    IDX["**staticfdp-index**\none per community / domain\nHarvests FDP catalogs → DCAT index"]
+    VP["**staticfdp-vp**\nglobal / cross-domain\nAggregates indexes → federation graph"]
+
+    F --> FDP
+    FDP -->|"registers (ping / PR)"| IDX
+    IDX -->|"aggregated by"| VP
 ```
 
 ---
