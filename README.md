@@ -11,13 +11,17 @@ dedicated server required.
 
 | Repository | Layer | What it does |
 |---|---|---|
-| **[staticfdp](https://github.com/StaticFDP/staticfdp)** | FAIR Data Point | Publishes a DCAT-conformant FDP from form submissions via static hosting |
-| **[staticfdp-index](https://github.com/StaticFDP/staticfdp-index)** | FDP Index | Harvests registered FDPs and serves a discovery catalog as RDF + HTML |
-| **[staticfdp-vp](https://github.com/StaticFDP/staticfdp-vp)** | Virtual Platform | Aggregates multiple FDP Indexes into a federated discovery hub |
+| **staticfdp** | FAIR Data Point | Publishes a DCAT-conformant FDP from form submissions via static hosting |
+| **staticfdp-index** | FDP Index | Harvests registered FDPs and serves a discovery catalog as RDF + HTML |
+| **staticfdp-vp** | Virtual Platform | Aggregates multiple FDP Indexes into a federated discovery hub |
 
-Each repository is independently deployable and mirrors on both
-[GitHub (StaticFDP org)](https://github.com/StaticFDP) and
-[Codeberg (StaticFDP org)](https://codeberg.org/StaticFDP).
+Each repository is independently deployable and available on both platforms:
+
+| | GitHub | Codeberg |
+|---|---|---|
+| staticfdp | [github.com/StaticFDP/staticfdp](https://github.com/StaticFDP/staticfdp) | [codeberg.org/StaticFDP/staticfdp](https://codeberg.org/StaticFDP/staticfdp) |
+| staticfdp-index | [github.com/StaticFDP/staticfdp-index](https://github.com/StaticFDP/staticfdp-index) | [codeberg.org/StaticFDP/staticfdp-index](https://codeberg.org/StaticFDP/staticfdp-index) |
+| staticfdp-vp | [github.com/StaticFDP/staticfdp-vp](https://github.com/StaticFDP/staticfdp-vp) | [codeberg.org/StaticFDP/staticfdp-vp](https://codeberg.org/StaticFDP/staticfdp-vp) |
 
 ---
 
@@ -40,9 +44,16 @@ Each repository is independently deployable and mirrors on both
 - `fdp-config.yaml` — single source of truth (platform, URLs, publisher)
 - GitHub Actions + Woodpecker CI pipelines included
 
-**Quick start:**
+**Quick start (GitHub):**
 ```bash
 git clone https://github.com/StaticFDP/staticfdp
+cd staticfdp
+bash scripts/setup.sh
+```
+
+**Quick start (Codeberg):**
+```bash
+git clone https://codeberg.org/StaticFDP/staticfdp
 cd staticfdp
 bash scripts/setup.sh
 ```
@@ -91,7 +102,8 @@ Every component supports three deployment targets, configurable via `fdp-config.
 
 The **GA4GH Bring Your Own Disease** session (April 2026) is the first live
 deployment of `staticfdp`. Source:
-[StaticFDP/ga4gh-rare-disease-trajectories](https://github.com/StaticFDP/ga4gh-rare-disease-trajectories).
+- GitHub: [StaticFDP/ga4gh-rare-disease-trajectories](https://github.com/StaticFDP/ga4gh-rare-disease-trajectories)
+
 Live FDP: [fdp.semscape.org/ga4gh-rare-disease-trajectories/](https://fdp.semscape.org/ga4gh-rare-disease-trajectories/)
 
 ---
