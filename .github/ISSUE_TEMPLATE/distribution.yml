@@ -1,0 +1,122 @@
+name: "Add Distribution"
+description: "Add a downloadable or accessible form of an existing Dataset."
+title: "[DISTRIBUTION] "
+labels: ["distribution"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Add a Distribution
+        A Distribution is a specific format or access point for a Dataset —
+        e.g. a Turtle file, a CSV download, a SPARQL endpoint, or an API.
+
+  - type: input
+    id: dataset
+    attributes:
+      label: "Parent Dataset ⚠️"
+      description: "Title (or IRI) of the Dataset this Distribution belongs to."
+      placeholder: "NEMO Neuromuscular Disease Registry"
+    validations:
+      required: true
+
+  - type: input
+    id: catalog
+    attributes:
+      label: "Parent Catalog"
+      description: "Title of the Catalog (helps pipeline resolve the hierarchy)."
+      placeholder: "Rare Disease Patient Registries"
+
+  - type: input
+    id: title
+    attributes:
+      label: "Distribution title"
+      description: "Optional short label. Defaults to '{Dataset} — {format}'."
+      placeholder: "NEMO registry — RDF Turtle"
+
+  - type: dropdown
+    id: format
+    attributes:
+      label: "Format ⚠️"
+      description: "Primary media type of this distribution."
+      options:
+        - "text/turtle (RDF Turtle)"
+        - "application/ld+json (JSON-LD)"
+        - "application/rdf+xml (RDF/XML)"
+        - "text/csv (CSV)"
+        - "application/json (JSON)"
+        - "application/xml (XML)"
+        - "application/zip (ZIP archive)"
+        - "application/vnd.ms-excel (Excel)"
+        - "sparql (SPARQL endpoint)"
+        - "api (REST API)"
+        - "other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: access_type
+    attributes:
+      label: "Access type"
+      description: "How is the distribution accessed?"
+      options:
+        - "direct_download"
+        - "requires_login"
+        - "application_required"
+        - "api"
+        - "sparql_endpoint"
+
+  - type: input
+    id: download_url
+    attributes:
+      label: "Download URL"
+      description: "Direct URL to download the file (if publicly downloadable)."
+      placeholder: "https://data.example.org/nemo/nemo.ttl"
+
+  - type: input
+    id: access_url
+    attributes:
+      label: "Access URL"
+      description: "URL of the page or endpoint where this distribution can be accessed."
+      placeholder: "https://data.example.org/nemo/"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Notes"
+      description: "Any additional information about this distribution (size, update frequency, data quality, access procedure)."
+
+  - type: input
+    id: byte_size
+    attributes:
+      label: "Byte size"
+      description: "Approximate file size in bytes (leave blank if unknown)."
+      placeholder: "1048576"
+
+  - type: dropdown
+    id: rights
+    attributes:
+      label: "Access rights"
+      options:
+        - "public"
+        - "restricted"
+        - "non-public"
+        - "Same as dataset"
+
+  - type: dropdown
+    id: license
+    attributes:
+      label: "License"
+      options:
+        - "Same as dataset"
+        - "https://creativecommons.org/licenses/by/4.0/ (CC BY 4.0)"
+        - "https://creativecommons.org/licenses/by-sa/4.0/ (CC BY-SA 4.0)"
+        - "https://creativecommons.org/licenses/by-nc/4.0/ (CC BY-NC 4.0)"
+        - "https://creativecommons.org/publicdomain/zero/1.0/ (CC0)"
+        - "Other (specify in notes)"
+
+  - type: input
+    id: submitted_by
+    attributes:
+      label: "ORCID iD"
+      description: "Your ORCID identifier."
+      placeholder: "0000-0001-9773-4008"

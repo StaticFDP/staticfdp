@@ -1,0 +1,129 @@
+name: "Add Dataset"
+description: "Add a DCAT Dataset to an existing Catalog in this FAIR Data Point."
+title: "[DATASET] "
+labels: ["dataset"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Add a Dataset
+        A Dataset is a named collection of data published under one catalog.
+        It may have multiple Distributions (different formats / access points).
+
+  - type: input
+    id: catalog
+    attributes:
+      label: "Parent Catalog ⚠️"
+      description: "Title (or IRI) of the Catalog this Dataset belongs to. Copy from an existing [CATALOG] issue title."
+      placeholder: "Rare Disease Patient Registries"
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: "Dataset title ⚠️"
+      description: "Short, descriptive name for this dataset."
+      placeholder: "e.g. NEMO Neuromuscular Disease Registry"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description ⚠️"
+      description: "What does this dataset contain? How was it collected? Who are the subjects?"
+      placeholder: "Longitudinal patient data from the NEMO registry covering 2015–2024, including clinical assessments, genetic data, and patient-reported outcomes for SMA and DMD patients."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: "Language"
+      options:
+        - "en"
+        - "nl"
+        - "de"
+        - "fr"
+        - "es"
+        - "pt"
+        - "other"
+    default: 0
+
+  - type: input
+    id: version
+    attributes:
+      label: "Version"
+      placeholder: "1.0.0"
+
+  - type: input
+    id: theme
+    attributes:
+      label: "Theme (ontology term IRI)"
+      description: "Primary ontology class this dataset is about. Use a full IRI."
+      placeholder: "http://www.orpha.net/ORDO/Orphanet_98895"
+
+  - type: input
+    id: keywords
+    attributes:
+      label: "Keywords"
+      description: "Comma-separated keywords."
+      placeholder: "SMA, spinal muscular atrophy, registry, longitudinal"
+
+  - type: input
+    id: temporal_start
+    attributes:
+      label: "Temporal coverage — start"
+      description: "Earliest date of data in this dataset (YYYY or YYYY-MM-DD)."
+      placeholder: "2015-01-01"
+
+  - type: input
+    id: temporal_end
+    attributes:
+      label: "Temporal coverage — end"
+      description: "Leave blank if ongoing."
+      placeholder: "2024-12-31"
+
+  - type: input
+    id: spatial
+    attributes:
+      label: "Spatial coverage"
+      description: "Country or region IRI from GeoNames or EU Vocabulary."
+      placeholder: "http://publications.europa.eu/resource/authority/country/NLD"
+
+  - type: dropdown
+    id: license
+    attributes:
+      label: "License"
+      options:
+        - "https://creativecommons.org/licenses/by/4.0/ (CC BY 4.0)"
+        - "https://creativecommons.org/licenses/by-sa/4.0/ (CC BY-SA 4.0)"
+        - "https://creativecommons.org/licenses/by-nc/4.0/ (CC BY-NC 4.0)"
+        - "https://creativecommons.org/publicdomain/zero/1.0/ (CC0)"
+        - "https://opensource.org/licenses/MIT (MIT)"
+        - "Same as catalog"
+        - "Other (specify in description)"
+
+  - type: dropdown
+    id: rights
+    attributes:
+      label: "Access rights"
+      options:
+        - "public"
+        - "restricted"
+        - "non-public"
+
+  - type: input
+    id: contact
+    attributes:
+      label: "Contact point"
+      description: "Email or URL of a contact point for this dataset."
+      placeholder: "data-access@example.org"
+
+  - type: input
+    id: submitted_by
+    attributes:
+      label: "ORCID iD"
+      description: "Your ORCID identifier."
+      placeholder: "0000-0001-9773-4008"

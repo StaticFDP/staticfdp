@@ -1,0 +1,111 @@
+name: "Add Catalog"
+description: "Register a new DCAT Catalog in this FAIR Data Point."
+title: "[CATALOG] "
+labels: ["catalog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Add a Catalog
+        A Catalog groups related Datasets together under a shared theme or publisher.
+        Fill in the fields below. All fields marked ⚠️ are required.
+
+  - type: input
+    id: title
+    attributes:
+      label: "Catalog title ⚠️"
+      description: "A short, descriptive title for this catalog."
+      placeholder: "e.g. Rare Disease Patient Registries"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description ⚠️"
+      description: "What data does this catalog cover? Who collected it? Why is it useful?"
+      placeholder: "This catalog aggregates patient registry data for rare neuromuscular diseases..."
+    validations:
+      required: true
+
+  - type: input
+    id: publisher_name
+    attributes:
+      label: "Publisher name ⚠️"
+      description: "Name of the organisation publishing this catalog."
+      placeholder: "e.g. Amsterdam UMC"
+    validations:
+      required: true
+
+  - type: input
+    id: publisher_url
+    attributes:
+      label: "Publisher URL"
+      description: "Homepage of the publishing organisation."
+      placeholder: "https://www.amsterdamumc.org/"
+
+  - type: dropdown
+    id: license
+    attributes:
+      label: "License ⚠️"
+      description: "Under which license is this catalog published?"
+      options:
+        - "https://creativecommons.org/licenses/by/4.0/ (CC BY 4.0)"
+        - "https://creativecommons.org/licenses/by-sa/4.0/ (CC BY-SA 4.0)"
+        - "https://creativecommons.org/licenses/by-nc/4.0/ (CC BY-NC 4.0)"
+        - "https://creativecommons.org/publicdomain/zero/1.0/ (CC0)"
+        - "https://opensource.org/licenses/MIT (MIT)"
+        - "Other (specify in description)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: rights
+    attributes:
+      label: "Access rights"
+      description: "Who can access data in this catalog?"
+      options:
+        - "public"
+        - "restricted"
+        - "non-public"
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: "Language"
+      options:
+        - "en"
+        - "nl"
+        - "de"
+        - "fr"
+        - "es"
+        - "pt"
+        - "other"
+    default: 0
+
+  - type: checkboxes
+    id: themes
+    attributes:
+      label: "Theme / ontology vocabulary"
+      description: "Which ontologies describe the topics in this catalog? Select all that apply."
+      options:
+        - label: "ORDO — Orphanet Rare Disease Ontology (http://www.orpha.net/ontology/orphanet.owl)"
+        - label: "HPO — Human Phenotype Ontology (http://purl.obolibrary.org/obo/hp.owl)"
+        - label: "MONDO — Mondo Disease Ontology (http://purl.obolibrary.org/obo/mondo.owl)"
+        - label: "MeSH — Medical Subject Headings (https://id.nlm.nih.gov/mesh/)"
+        - label: "EFO — Experimental Factor Ontology (http://www.ebi.ac.uk/efo/efo.owl)"
+        - label: "ChEBI — Chemical Entities (http://purl.obolibrary.org/obo/chebi.owl)"
+
+  - type: input
+    id: homepage
+    attributes:
+      label: "Catalog homepage"
+      description: "URL of a human-readable landing page for this catalog (if different from this FDP)."
+      placeholder: "https://example.org/catalog"
+
+  - type: input
+    id: submitted_by
+    attributes:
+      label: "ORCID iD"
+      description: "Your ORCID identifier (will be linked as dcterms:creator)."
+      placeholder: "0000-0001-9773-4008"
