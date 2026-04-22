@@ -1,0 +1,39 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "StaticFDP — Static FAIR Data Point",
+  "description": "A static-hosting implementation of the FAIR Data Point specification. Publishes DCAT-conformant FDPs from form submissions via GitHub Pages or Codeberg Pages, with ORCID authentication and no dedicated server required.",
+  "license": "https://spdx.org/licenses/MIT.html",
+  "codeRepository": "https://github.com/StaticFDP/staticfdp",
+  "url": "https://codeberg.org/StaticFDP/staticfdp",
+  "dateCreated": "2026-04-16",
+  "version": "0.1.0",
+  "keywords": ["FAIR Data Point", "FAIR data", "linked data", "DCAT", "static site", "ORCID"],
+  "programmingLanguage": ["JavaScript", "Python"],
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Rajaram",
+      "familyName": "Kaliyaperumal",
+      "@id": "https://orcid.org/0000-0002-1215-167X"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Eric G.",
+      "familyName": "Prud'hommeaux",
+      "@id": "https://orcid.org/0000-0003-1775-9921"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Egon",
+      "familyName": "Willighagen",
+      "@id": "https://orcid.org/0000-0001-7542-0286"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Andra",
+      "familyName": "Waagmeester",
+      "@id": "https://orcid.org/0000-0001-9773-4008"
+    }
+  ]
+}

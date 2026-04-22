@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: StaticFDP — Static FAIR Data Point
+abstract: >
+  A static-hosting implementation of the FAIR Data Point specification.
+  Publishes DCAT-conformant FDPs from form submissions via GitHub Pages or
+  Codeberg Pages, with ORCID authentication and no dedicated server required.
+license: MIT
+repository-code: https://github.com/StaticFDP/staticfdp
+url: https://codeberg.org/StaticFDP/staticfdp
+date-released: "2026-04-16"
+version: "0.1.0"
+keywords:
+  - FAIR Data Point
+  - FAIR data
+  - linked data
+  - DCAT
+  - static site
+  - ORCID
+authors:
+  - given-names: Rajaram
+    family-names: Kaliyaperumal
+    orcid: https://orcid.org/0000-0002-1215-167X
+  - given-names: Eric G.
+    family-names: "Prud'hommeaux"
+    orcid: https://orcid.org/0000-0003-1775-9921
+  - given-names: Egon
+    family-names: Willighagen
+    orcid: https://orcid.org/0000-0001-7542-0286
+  - given-names: Andra
+    family-names: Waagmeester
+    orcid: https://orcid.org/0000-0001-9773-4008

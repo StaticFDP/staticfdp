@@ -110,6 +110,21 @@ Live FDP: [fdp.semscape.org/ga4gh-rare-disease-trajectories/](https://fdp.semsca
 
 ---
 
+## Authors
+
+This work was envisioned and built by:
+
+| Name | ORCID |
+|---|---|
+| Rajaram Kaliyaperumal | [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--1215--167X-a6ce39?logo=orcid)](https://orcid.org/0000-0002-1215-167X) |
+| Eric G. Prud'hommeaux | [![ORCID](https://img.shields.io/badge/ORCID-0000--0003--1775--9921-a6ce39?logo=orcid)](https://orcid.org/0000-0003-1775-9921) |
+| Egon Willighagen | [![ORCID](https://img.shields.io/badge/ORCID-0000--0001--7542--0286-a6ce39?logo=orcid)](https://orcid.org/0000-0001-7542-0286) |
+| Andra Waagmeester | [![ORCID](https://img.shields.io/badge/ORCID-0000--0001--9773--4008-a6ce39?logo=orcid)](https://orcid.org/0000-0001-9773-4008) |
+
+Machine-readable citation metadata is available in [`CITATION.cff`](CITATION.cff) and [`codemeta.json`](codemeta.json).
+
+---
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
