@@ -335,6 +335,28 @@
   </style>
 </head>
 <body>
+<!-- ╔══════════════════════════════════════════════════════════════════════╗
+     ║  BRANDING — edit this block to customise for your deployment.      ║
+     ║  See DEPLOYMENT.md § "Branding and theming" for all options.       ║
+     ╚══════════════════════════════════════════════════════════════════════╝ -->
+<script id="branding" type="application/json">
+{
+  "title":        "StaticFDP — Add Metadata",
+  "subtitle":     "Describe your data at the right level of the FAIR Data Point hierarchy",
+  "logo_url":     "",
+  "logo_alt":     "Logo",
+  "header_bg":    "linear-gradient(135deg,#0f4c3a 0%,#1a6b5a 60%,#2563eb 100%)",
+  "accent_color": "#1a6b5a",
+  "footer_text":  "StaticFDP Ecosystem",
+  "footer_links": [
+    { "label": "GitHub",   "url": "https://github.com/StaticFDP/staticfdp" },
+    { "label": "Codeberg", "url": "https://codeberg.org/StaticFDP/staticfdp" }
+  ],
+  "worker_url":  "",
+  "custom_css":  ""
+}
+</script>
+
 <div class="app">
 
   <!-- ── Header ── -->
@@ -851,6 +873,11 @@ you type.</div>
   </div><!-- /panels -->
 </div><!-- /app -->
 
+<footer id="site-footer" style="background:#1a1a2e;color:rgba(255,255,255,.5);padding:14px 24px;font-size:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+  <span id="footer-text">StaticFDP Ecosystem</span>
+  <span id="footer-links"></span>
+</footer>
+
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
 let currentLayer = null;
@@ -1347,6 +1374,69 @@ document.addEventListener('click', e => {
     if (widget && !widget.contains(e.target)) closeRoRDropdown(layer);
   });
 });
+
+// ── Apply branding ────────────────────────────────────────────────────────────
+(function applyBranding() {
+  let B = {};
+  try { B = JSON.parse(document.getElementById('branding')?.textContent || '{}'); } catch {}
+
+  const set = (sel, prop, val) => { const el = document.querySelector(sel); if (el && val) el[prop] = val; };
+  const css = (v, val) => val && document.documentElement.style.setProperty(v, val);
+
+  // Title / subtitle
+  set('header h1', 'textContent', B.title);
+  set('header p',  'textContent', B.subtitle);
+  if (B.title) document.title = B.title;
+
+  // Logo
+  if (B.logo_url) {
+    const img = document.createElement('img');
+    img.src = B.logo_url; img.alt = B.logo_alt || 'Logo';
+    img.style.cssText = 'height:36px;width:auto;margin-right:.75rem;border-radius:4px';
+    const hl = document.querySelector('.header-left');
+    if (hl) hl.insertBefore(img, hl.firstChild);
+  }
+
+  // Header background
+  const header = document.querySelector('header');
+  if (header && B.header_bg) header.style.background = B.header_bg;
+
+  // Accent colour (CSS variable used for buttons, links, focus rings)
+  css('--green',   B.accent_color);
+  css('--green-d', B.accent_color ? B.accent_color + 'cc' : null);
+  css('--green-l', B.accent_color ? B.accent_color + '22' : null);
+
+  // Footer
+  const ft = document.getElementById('footer-text');
+  if (ft && B.footer_text) ft.textContent = B.footer_text;
+  const fl = document.getElementById('footer-links');
+  if (fl && B.footer_links?.length) {
+    fl.innerHTML = B.footer_links.map(l =>
+      `<a href="${l.url}" target="_blank" style="color:rgba(255,255,255,.6);margin-left:12px">${l.label}</a>`
+    ).join('');
+  }
+
+  // Worker URL — prepend to all fetch paths
+  if (B.worker_url) {
+    window.__workerBase = B.worker_url.replace(/\/$/, '');
+  }
+
+  // Custom CSS
+  if (B.custom_css) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet'; link.href = B.custom_css;
+    document.head.appendChild(link);
+  }
+})();
+
+// ── Patch fetch paths to use worker_url if set ────────────────────────────────
+const _origFetch = window.fetch;
+window.fetch = function(url, opts) {
+  if (typeof url === 'string' && url.startsWith('/') && window.__workerBase) {
+    url = window.__workerBase + url;
+  }
+  return _origFetch.call(this, url, opts);
+};
 
 // ── Init ────────────────────────────────────────────────────────────────────
 initOrcid();
