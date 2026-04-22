@@ -42,16 +42,76 @@
     header p  { font-size: .8rem; opacity: .75; }
     .header-left { display: flex; flex-direction: column; gap: .1rem; }
 
-    /* ORCID login chip */
-    #orcid-chip {
-      display: flex; align-items: center; gap: .5rem;
+    /* ── Identity chips (header top-right) ── */
+    .id-chips { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; justify-content: flex-end; }
+
+    .id-chip {
+      display: flex; align-items: center; gap: .45rem;
       background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
       border-radius: 20px; padding: .3rem .9rem; font-size: .82rem; color: #fff;
       text-decoration: none; white-space: nowrap; cursor: pointer;
     }
+    .id-chip:hover { background: rgba(255,255,255,.25); }
+    .id-chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    /* keep the old selector working */
+    #orcid-chip { display: flex; align-items: center; gap: .45rem;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px; padding: .3rem .9rem; font-size: .82rem; color: #fff;
+      text-decoration: none; white-space: nowrap; cursor: pointer; }
     #orcid-chip:hover { background: rgba(255,255,255,.25); }
-    #orcid-chip .dot { width: 8px; height: 8px; border-radius: 50%;
-                       background: #a6ce39; flex-shrink: 0; }
+    #orcid-chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Org chip states */
+    #ror-chip { display: none; }   /* hidden until signed in */
+    #ror-chip-found { display: flex; align-items: center; gap: .4rem; }
+    #ror-chip-found a { color: rgba(255,255,255,.7); font-size: .72rem;
+                        text-decoration: underline; cursor: pointer; }
+    /* Inline RoR search (State 2 fallback / State 3 override) */
+    #ror-chip-search {
+      display: none; align-items: center; gap: .35rem;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px; padding: .2rem .5rem .2rem .75rem;
+    }
+    #ror-chip-search input {
+      background: transparent; border: none; outline: none;
+      color: #fff; font-size: .8rem; width: 160px;
+    }
+    #ror-chip-search input::placeholder { color: rgba(255,255,255,.55); }
+    #ror-chip-search button {
+      background: rgba(255,255,255,.2); border: none; border-radius: 12px;
+      color: #fff; font-size: .75rem; font-weight: 700; padding: .15rem .55rem;
+      cursor: pointer; white-space: nowrap;
+    }
+    #ror-chip-search button:hover { background: rgba(255,255,255,.35); }
+    /* dropdown that appears under the header search */
+    #ror-header-dropdown {
+      position: absolute; top: calc(100% + 4px); right: 0; z-index: 200;
+      background: #fff; border: 1px solid var(--gray-200); border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.15); min-width: 280px;
+      display: none; overflow: hidden;
+    }
+    #ror-header-dropdown.open { display: block; }
+    #ror-header-dropdown .ror-item { padding: .5rem .75rem; cursor: pointer;
+      font-size: .83rem; color: #1a1a2e; border-bottom: 1px solid #f3f4f6;
+      display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+    #ror-header-dropdown .ror-item:last-child { border-bottom: none; }
+    #ror-header-dropdown .ror-item:hover { background: var(--green-l); }
+    #ror-header-dropdown .ror-item .rn { font-weight: 600; }
+    #ror-header-dropdown .ror-item .rm { font-size: .72rem; color: var(--gray-400); white-space: nowrap; }
+    /* "Save to ORCID" toast */
+    #ror-save-toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300;
+      background: #1a1a2e; color: #fff; border-radius: 10px;
+      padding: .9rem 1.2rem; font-size: .85rem; display: none;
+      align-items: center; gap: .8rem; box-shadow: 0 4px 20px rgba(0,0,0,.25);
+      max-width: 360px;
+    }
+    #ror-save-toast button { background: var(--green); color: #fff; border: none;
+      border-radius: 6px; padding: .35rem .8rem; font-size: .8rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap; }
+    #ror-save-toast .dismiss { background: none; border: none; color: rgba(255,255,255,.5);
+      cursor: pointer; font-size: 1.1rem; padding: 0; }
+    .header-right { position: relative; }
 
     /* ── Three-panel body ── */
     .panels { display: grid; grid-template-columns: 220px 1fr 300px;
@@ -163,6 +223,38 @@
       border-bottom: 1px solid var(--gray-200); padding-bottom: .4rem;
     }
 
+    /* ── RoR lookup widget ── */
+    .ror-widget { position: relative; }
+    .ror-search-row { display: flex; gap: .4rem; }
+    .ror-search-row input { flex: 1; }
+    .ror-search-row button {
+      flex-shrink: 0; padding: .5rem .7rem; border: 1px solid var(--gray-200);
+      border-radius: var(--radius); background: var(--gray-100); cursor: pointer;
+      font-size: .9rem; line-height: 1; transition: background .15s;
+    }
+    .ror-search-row button:hover { background: var(--gray-200); }
+    .ror-dropdown {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100;
+      background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius);
+      box-shadow: 0 4px 16px rgba(0,0,0,.12); overflow: hidden; display: none;
+    }
+    .ror-dropdown.open { display: block; }
+    .ror-item {
+      padding: .5rem .75rem; cursor: pointer; font-size: .83rem;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex; align-items: baseline; justify-content: space-between; gap: .5rem;
+    }
+    .ror-item:last-child { border-bottom: none; }
+    .ror-item:hover { background: var(--green-l); }
+    .ror-item .ror-name { font-weight: 600; color: var(--gray-800); }
+    .ror-item .ror-meta { font-size: .75rem; color: var(--gray-400); white-space: nowrap; }
+    .ror-id-row { display: flex; gap: .4rem; margin-top: .4rem; align-items: center; }
+    .ror-id-row input { flex: 1; font-family: monospace; font-size: .8rem; }
+    .ror-clear { background: none; border: none; cursor: pointer; color: var(--gray-400);
+                 font-size: 1rem; padding: 0 .2rem; line-height: 1; }
+    .ror-clear:hover { color: #ef4444; }
+    .ror-spinning::after { content: ' ⏳'; }
+
     /* ── Actions ── */
     .form-actions { display: flex; gap: .7rem; align-items: center;
                     padding-top: .5rem; flex-wrap: wrap; }
@@ -251,11 +343,48 @@
       <h1>StaticFDP — Add Metadata</h1>
       <p>Describe your data at the right level of the FAIR Data Point hierarchy</p>
     </div>
-    <a id="orcid-chip" href="#" onclick="handleOrcidLogin(event)">
-      <span class="dot" id="orcid-dot" style="background:#6b7280;"></span>
-      <span id="orcid-label">Sign in with ORCID</span>
-    </a>
+
+    <div class="header-right">
+      <div class="id-chips">
+
+        <!-- Org chip (State 1: auto-filled · State 2: search) — hidden until signed in -->
+        <div id="ror-chip">
+          <!-- State 1: RoR resolved from ORCID -->
+          <div id="ror-chip-found" style="display:none">
+            <span class="id-chip" style="cursor:default">
+              <span>🏢</span>
+              <a id="ror-chip-link" href="#" target="_blank" rel="noopener"
+                 style="color:#fff;text-decoration:none" id="ror-chip-name"></a>
+            </span>
+            <a href="#" onclick="showRoRSearch(event)" style="font-size:.72rem;color:rgba(255,255,255,.6);text-decoration:underline">change</a>
+          </div>
+          <!-- State 2: search (shown when no RoR in ORCID, or user clicks "change") -->
+          <div id="ror-chip-search">
+            <span style="font-size:.85rem">🏢</span>
+            <input id="ror-header-input" type="text" placeholder="Search your organisation…"
+                   oninput="debounceHeaderRoR()" autocomplete="off">
+            <button type="button" onclick="searchHeaderRoR()">Search</button>
+          </div>
+          <!-- Dropdown results (absolute, overlaps content) -->
+          <div id="ror-header-dropdown"></div>
+        </div>
+
+        <!-- ORCID login chip -->
+        <a id="orcid-chip" href="#" onclick="handleOrcidLogin(event)">
+          <span class="dot" id="orcid-dot" style="background:#6b7280;"></span>
+          <span id="orcid-label">Sign in with ORCID</span>
+        </a>
+
+      </div>
+    </div>
   </header>
+
+  <!-- "Save to ORCID profile" toast (appears after manual RoR selection) -->
+  <div id="ror-save-toast">
+    <span id="ror-save-toast-text">Add this organisation to your ORCID profile?</span>
+    <button onclick="saveRoRToOrcid()">Save to ORCID</button>
+    <button class="dismiss" onclick="document.getElementById('ror-save-toast').style.display='none'" title="Dismiss">✕</button>
+  </div>
 
   <!-- ── Three panels ── -->
   <div class="panels">
@@ -368,12 +497,30 @@
             <div class="field-row">
               <div class="field">
                 <label>Publisher name <span class="req">*</span></label>
-                <input type="text" name="publisher_name" placeholder="e.g. Amsterdam UMC" required oninput="updatePreview()">
+                <input type="text" name="publisher_name" id="catalog-publisher-name" placeholder="e.g. Amsterdam UMC" required oninput="updatePreview()">
               </div>
               <div class="field">
                 <label>Publisher URL</label>
                 <input type="url" name="publisher_url" placeholder="https://example.org" oninput="updatePreview()">
               </div>
+            </div>
+            <div class="field">
+              <label>Publisher RoR ID <span class="hint">optional — <a href="https://ror.org" target="_blank" style="color:var(--green)">Research Organization Registry</a></span></label>
+              <div class="ror-widget" id="ror-widget-catalog">
+                <div class="ror-search-row">
+                  <input type="text" id="ror-search-catalog" placeholder="Search organisation name to look up RoR…" autocomplete="off"
+                         oninput="debounceRoR('catalog')" onfocus="this.select()">
+                  <button type="button" onclick="searchRoR('catalog')" title="Search RoR">🔍</button>
+                </div>
+                <div class="ror-dropdown" id="ror-dropdown-catalog"></div>
+                <div class="ror-id-row">
+                  <input type="text" name="publisher_ror" id="ror-id-catalog"
+                         placeholder="https://ror.org/…" oninput="updatePreview()" autocomplete="off"
+                         style="font-family:monospace;font-size:.8rem;">
+                  <button type="button" class="ror-clear" onclick="clearRoR('catalog')" title="Clear">✕</button>
+                </div>
+              </div>
+              <div class="hint" style="margin-top:.2rem;">Type to search, then click a result — or paste the RoR ID directly</div>
             </div>
 
             <p class="section-title" style="margin-top:.4rem;">Access &amp; Rights</p>
@@ -707,16 +854,20 @@ you type.</div>
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
 let currentLayer = null;
-let orcidId = null;
+let orcidId   = null;
 let orcidName = null;
+let rorId     = null;
+let rorName   = null;
+let rorCountry = null;
+let rorFromOrcid = false; // true = came automatically; false = manually selected
 
-// ── ORCID auth ─────────────────────────────────────────────────────────────
-// Reads cookie set by the Cloudflare / Deno worker after ORCID callback
+// ── Cookie / storage helpers ───────────────────────────────────────────────
 function readCookie(name) {
   const m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
   return m ? decodeURIComponent(m[1]) : null;
 }
 
+// ── ORCID auth ─────────────────────────────────────────────────────────────
 function initOrcid() {
   orcidId   = readCookie('orcid_id')   || sessionStorage.getItem('orcid_id');
   orcidName = readCookie('orcid_name') || sessionStorage.getItem('orcid_name');
@@ -725,20 +876,175 @@ function initOrcid() {
   const label = document.getElementById('orcid-label');
 
   if (orcidId) {
-    dot.style.background   = '#a6ce39';
-    label.textContent      = orcidName || orcidId;
-    // Fill all ORCID fields
+    dot.style.background = '#a6ce39';
+    label.textContent    = orcidName || orcidId;
     ['catalog','dataset','distrib'].forEach(l => {
       const f = document.getElementById(`submitter_orcid_${l}`);
       if (f) f.value = orcidId;
     });
-    // Hide login notes, enable buttons
     document.querySelectorAll('.login-note').forEach(n => n.style.display = 'none');
     document.querySelectorAll('[id^="submit-"]').forEach(b => b.disabled = false);
+
+    // Now resolve RoR
+    initRoR();
   } else {
     dot.style.background = '#6b7280';
     label.textContent    = 'Sign in with ORCID';
     document.querySelectorAll('[id^="submit-"]').forEach(b => b.disabled = true);
+  }
+}
+
+// ── RoR / org identity ─────────────────────────────────────────────────────
+function initRoR() {
+  // Priority: cookie (set by worker after ORCID lookup) > sessionStorage (set from URL params)
+  rorId      = readCookie('ror_id')      || sessionStorage.getItem('ror_id')      || null;
+  rorName    = readCookie('ror_name')    || sessionStorage.getItem('ror_name')    || null;
+  rorCountry = readCookie('ror_country') || sessionStorage.getItem('ror_country') || '';
+
+  const chip = document.getElementById('ror-chip');
+  if (!chip) return;
+  chip.style.display = 'block';
+
+  if (rorId && rorName) {
+    // State 1: RoR resolved automatically from ORCID
+    rorFromOrcid = true;
+    showRoRFound();
+    // Auto-fill publisher_ror in catalog form
+    fillRoRFields();
+  } else {
+    // State 2: no RoR in ORCID — show inline search
+    rorFromOrcid = false;
+    showRoRSearch();
+  }
+}
+
+function showRoRFound() {
+  document.getElementById('ror-chip-found').style.display = 'flex';
+  document.getElementById('ror-chip-search').style.display = 'none';
+  const nameEl = document.getElementById('ror-chip-name');
+  if (nameEl) nameEl.textContent = rorName;
+  const linkEl = document.getElementById('ror-chip-link');
+  if (linkEl) { linkEl.href = rorId; linkEl.textContent = rorName; }
+}
+
+function showRoRSearch(e) {
+  if (e) e.preventDefault();
+  document.getElementById('ror-chip-found').style.display  = 'none';
+  document.getElementById('ror-chip-search').style.display = 'flex';
+  setTimeout(() => document.getElementById('ror-header-input')?.focus(), 50);
+}
+
+function fillRoRFields() {
+  // Fill publisher_ror in catalog form widget
+  const idField = document.getElementById('ror-id-catalog');
+  if (idField && !idField.value) idField.value = rorId || '';
+  const searchField = document.getElementById('ror-search-catalog');
+  if (searchField && !searchField.value) searchField.value = rorName || '';
+  // Also fill publisher name if empty
+  const nameField = document.getElementById('catalog-publisher-name');
+  if (nameField && !nameField.value) nameField.value = rorName || '';
+  updatePreview();
+}
+
+// ── Header RoR search ──────────────────────────────────────────────────────
+let _headerRorTimer = null;
+const ROR_API = 'https://api.ror.org/organizations';
+
+function debounceHeaderRoR() {
+  clearTimeout(_headerRorTimer);
+  const q = document.getElementById('ror-header-input')?.value.trim();
+  if (!q || q.length < 3) {
+    document.getElementById('ror-header-dropdown').classList.remove('open');
+    return;
+  }
+  _headerRorTimer = setTimeout(searchHeaderRoR, 350);
+}
+
+async function searchHeaderRoR() {
+  const q = document.getElementById('ror-header-input')?.value.trim();
+  if (!q || q.length < 2) return;
+  const dd = document.getElementById('ror-header-dropdown');
+  dd.innerHTML = '<div class="ror-item" style="color:#9ca3af">Searching…</div>';
+  dd.classList.add('open');
+  try {
+    const res  = await fetch(`${ROR_API}?query=${encodeURIComponent(q)}&page=1`);
+    const data = await res.json();
+    const items = (data.items || []).slice(0, 6);
+    if (!items.length) {
+      dd.innerHTML = '<div class="ror-item" style="color:#9ca3af">No results</div>';
+      return;
+    }
+    dd.innerHTML = items.map(org => {
+      const country = org.country?.country_name || '';
+      const types   = (org.types || []).join(', ');
+      return `<div class="ror-item" onclick="selectHeaderRoR(${JSON.stringify(org.id)},${JSON.stringify(org.name)},${JSON.stringify(org.country?.country_code||'')})">
+        <span class="rn">${org.name}</span>
+        <span class="rm">${[country, types].filter(Boolean).join(' · ')}</span>
+      </div>`;
+    }).join('');
+  } catch { dd.innerHTML = '<div class="ror-item" style="color:#ef4444">Lookup failed</div>'; }
+}
+
+function selectHeaderRoR(id, name, country) {
+  rorId      = id;
+  rorName    = name;
+  rorCountry = country;
+  rorFromOrcid = false; // manually selected
+
+  // Store in sessionStorage for persistence
+  sessionStorage.setItem('ror_id',      id);
+  sessionStorage.setItem('ror_name',    name);
+  sessionStorage.setItem('ror_country', country);
+
+  document.getElementById('ror-header-dropdown').classList.remove('open');
+  showRoRFound();
+  fillRoRFields();
+
+  // Show "Save to ORCID" toast (only if user has write token)
+  if (orcidId) showSaveToOrcidToast(name);
+}
+
+// Close header dropdown when clicking outside
+document.addEventListener('click', e => {
+  const chip = document.getElementById('ror-chip');
+  if (chip && !chip.contains(e.target))
+    document.getElementById('ror-header-dropdown')?.classList.remove('open');
+});
+
+// ── Save to ORCID ──────────────────────────────────────────────────────────
+function showSaveToOrcidToast(orgName) {
+  const toast = document.getElementById('ror-save-toast');
+  const text  = document.getElementById('ror-save-toast-text');
+  if (text) text.textContent = `Add "${orgName}" to your ORCID profile?`;
+  if (toast) toast.style.display = 'flex';
+}
+
+async function saveRoRToOrcid() {
+  if (!rorId || !rorName) return;
+  const toast = document.getElementById('ror-save-toast');
+  const btn   = toast?.querySelector('button');
+  if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+
+  try {
+    const resp = await fetch('/auth/orcid/update-affiliation', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ror_id: rorId, ror_name: rorName, ror_country: rorCountry }),
+    });
+    if (!resp.ok) throw new Error((await resp.json()).error || resp.statusText);
+    if (toast) toast.style.display = 'none';
+    // Brief success indicator on the chip
+    const chip = document.getElementById('ror-chip-found');
+    if (chip) {
+      const orig = chip.innerHTML;
+      chip.innerHTML += ' <span style="color:#a6ce39;font-size:.75rem">✓ saved to ORCID</span>';
+      setTimeout(() => { chip.innerHTML = orig; }, 3000);
+    }
+  } catch(err) {
+    if (btn) { btn.textContent = 'Save to ORCID'; btn.disabled = false; }
+    alert('Could not save to ORCID: ' + err.message +
+      '\n\nYou may need to sign out and sign in again to grant write access.');
   }
 }
 
@@ -823,6 +1129,7 @@ function updatePreview() {
     const desc   = val(f,'description')   || '…';
     const pub    = val(f,'publisher_name')|| '…';
     const pubUrl = val(f,'publisher_url');
+    const pubRor = val(f,'publisher_ror');
     const lic    = val(f,'license') === 'other' ? val(f,'license_other') : val(f,'license');
     const rights = val(f,'rights');
     const lang   = val(f,'language');
@@ -835,7 +1142,7 @@ function updatePreview() {
 **type:** catalog
 **title:** ${title}
 **description:** ${desc}
-**publisher_name:** ${pub}${pubUrl ? `\n**publisher_url:** ${pubUrl}` : ''}
+**publisher_name:** ${pub}${pubUrl ? `\n**publisher_url:** ${pubUrl}` : ''}${pubRor ? `\n**publisher_ror:** ${pubRor}` : ''}
 **license:** ${lic || '—'}
 **rights:** ${rights}
 **language:** ${lang}${taxons.length ? `\n**theme_taxonomy:**\n${taxons.map(t=>`  - ${t}`).join('\n')}` : ''}${home ? `\n**homepage:** ${home}` : ''}
@@ -957,18 +1264,111 @@ async function submitForm(e, type) {
   }
 }
 
+// ── RoR lookup ──────────────────────────────────────────────────────────────
+// Public RoR API — no auth, CORS-enabled
+const ROR_API = 'https://api.ror.org/organizations';
+let _rorTimers = {};
+
+function debounceRoR(layer) {
+  clearTimeout(_rorTimers[layer]);
+  const q = document.getElementById(`ror-search-${layer}`)?.value.trim();
+  if (!q || q.length < 3) { closeRoRDropdown(layer); return; }
+  _rorTimers[layer] = setTimeout(() => searchRoR(layer), 350);
+}
+
+async function searchRoR(layer) {
+  const input = document.getElementById(`ror-search-${layer}`);
+  const q = input?.value.trim();
+  if (!q || q.length < 2) return;
+
+  const dropdown = document.getElementById(`ror-dropdown-${layer}`);
+  dropdown.innerHTML = '<div class="ror-item" style="color:#9ca3af">Searching…</div>';
+  dropdown.classList.add('open');
+
+  try {
+    const res  = await fetch(`${ROR_API}?query=${encodeURIComponent(q)}&page=1`);
+    const data = await res.json();
+    const items = (data.items || []).slice(0, 6);
+
+    if (!items.length) {
+      dropdown.innerHTML = '<div class="ror-item" style="color:#9ca3af">No results found</div>';
+      return;
+    }
+
+    dropdown.innerHTML = items.map(org => {
+      const country = org.country?.country_name || '';
+      const types   = (org.types || []).join(', ');
+      return `<div class="ror-item" onclick="selectRoR('${layer}','${org.id}',${JSON.stringify(org.name)})">
+        <span class="ror-name">${org.name}</span>
+        <span class="ror-meta">${[country, types].filter(Boolean).join(' · ')}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    dropdown.innerHTML = `<div class="ror-item" style="color:#ef4444">Lookup failed — paste RoR ID manually</div>`;
+  }
+}
+
+function selectRoR(layer, rorId, orgName) {
+  // Fill the RoR ID field
+  const idField = document.getElementById(`ror-id-${layer}`);
+  if (idField) { idField.value = rorId; }
+
+  // Also pre-fill publisher name if still empty (catalog layer)
+  if (layer === 'catalog') {
+    const nameField = document.getElementById('catalog-publisher-name');
+    if (nameField && !nameField.value) nameField.value = orgName;
+  }
+
+  // Update search input to show selected org name
+  const searchField = document.getElementById(`ror-search-${layer}`);
+  if (searchField) searchField.value = orgName;
+
+  closeRoRDropdown(layer);
+  updatePreview();
+}
+
+function clearRoR(layer) {
+  const idField = document.getElementById(`ror-id-${layer}`);
+  if (idField) idField.value = '';
+  const searchField = document.getElementById(`ror-search-${layer}`);
+  if (searchField) searchField.value = '';
+  closeRoRDropdown(layer);
+  updatePreview();
+}
+
+function closeRoRDropdown(layer) {
+  document.getElementById(`ror-dropdown-${layer}`)?.classList.remove('open');
+}
+
+// Close RoR dropdowns when clicking outside
+document.addEventListener('click', e => {
+  ['catalog','dataset','distrib'].forEach(layer => {
+    const widget = document.getElementById(`ror-widget-${layer}`);
+    if (widget && !widget.contains(e.target)) closeRoRDropdown(layer);
+  });
+});
+
 // ── Init ────────────────────────────────────────────────────────────────────
 initOrcid();
 
-// Check for ORCID callback params in URL (after redirect back from worker)
-const params = new URLSearchParams(window.location.search);
-if (params.get('orcid_id')) {
+// Check for identity params in URL (set by worker after ORCID callback redirect)
+(function consumeUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.get('orcid_id')) return;
+
   sessionStorage.setItem('orcid_id',   params.get('orcid_id'));
   sessionStorage.setItem('orcid_name', params.get('orcid_name') || '');
-  // Clean URL
+
+  if (params.get('ror_id')) {
+    sessionStorage.setItem('ror_id',      params.get('ror_id'));
+    sessionStorage.setItem('ror_name',    params.get('ror_name')    || '');
+    sessionStorage.setItem('ror_country', params.get('ror_country') || '');
+  }
+
+  // Clean URL so params don't leak in links / bookmarks
   window.history.replaceState({}, '', window.location.pathname);
   initOrcid();
-}
+})();
 </script>
 </body>
 </html>
