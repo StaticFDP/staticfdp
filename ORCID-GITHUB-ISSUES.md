@@ -1,5 +1,21 @@
 # ORCID-Authenticated GitHub Issues Forms
 
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![AI-assisted](https://img.shields.io/badge/AI--assisted-Claude%20(Anthropic)-blueviolet)](https://anthropic.com)
+
+**Author:** [Andra Waagmeester](https://orcid.org/0000-0001-9773-4008)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0001--9773--4008-a6ce39?logo=orcid&logoColor=white)](https://orcid.org/0000-0001-9773-4008)
+
+> This guide is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+> You are free to share and adapt it for any purpose, provided you give appropriate credit.
+> The code examples are released under [MIT](https://spdx.org/licenses/MIT.html).
+>
+> **AI notice:** this document was developed with the assistance of
+> [Claude](https://anthropic.com) (Anthropic). The design, requirements, and
+> review are by the author.
+
+---
+
 A step-by-step guide to adding ORCID login to any static HTML form that
 submits to GitHub Issues — with no server, no database, and no password
 management. The submitter's ORCID iD and (optionally) their RoR organisation
@@ -691,3 +707,22 @@ fetch(`${FORGEJO_BASE}/api/v1/repos/${OWNER}/${REPO}/issues`, {
 | `window.OrcidIdentity` | JS API exposing id, name, ror* |
 | `ALLOWED_RETURN_ORIGINS` | Security: which domains can receive the post-login redirect |
 | GitHub Issue template | Structured data capture; ORCID/RoR fields pre-filled |
+
+---
+
+## License and attribution
+
+This guide is © [Andra Waagmeester](https://orcid.org/0000-0001-9773-4008)
+and released under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
+**Suggested citation:**
+
+> Waagmeester, A. (2026). *ORCID-Authenticated GitHub Issues Forms*.
+> StaticFDP Ecosystem. https://github.com/StaticFDP/staticfdp/blob/main/ORCID-GITHUB-ISSUES.md
+> CC BY 4.0. ORCID: [0000-0001-9773-4008](https://orcid.org/0000-0001-9773-4008)
+
+Code examples in this guide are released under the [MIT License](https://spdx.org/licenses/MIT.html).
+
+**AI notice:** this document was developed with the assistance of
+[Claude](https://anthropic.com) by Anthropic. The conceptual design,
+architecture decisions, and review are by the author.
