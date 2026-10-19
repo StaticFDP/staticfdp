@@ -1,5 +1,8 @@
 # StaticFDP Ecosystem
 
+> [!IMPORTANT]
+> **New FDPs: start from the [FDP ecosystem template](https://github.com/StaticFDP/fdp-ecosystem-template).** In the [StaticFDP consolidation](https://github.com/StaticFDP/.github/blob/main/profile/README.md#which-repository-does-what) (one repository per layer), this repository's ORCID sign-in form and Codeberg mirror move to the template as an option ([fdp-ecosystem-template#2](https://github.com/StaticFDP/fdp-ecosystem-template/pull/2)). For indexing, use [fdp-index](https://github.com/StaticFDP/fdp-index). Once those have landed, this repository is proposed for archiving; it stays readable. The Codeberg mirror follows the same plan.
+
 The StaticFDP ecosystem provides three open-source reference implementations
 for the [FAIR Data Point](https://specs.fairdatapoint.org/) architecture — all
 deployable on **static hosting** (GitHub Pages or Codeberg Pages) with no
